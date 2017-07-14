@@ -8,9 +8,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#F5FCFF",
-    "icon": "./assets/icons/BRO.png",
+    "icon": "./assets/icons/FitiWhiteBackground.png",
     "loading": {
-      "icon": "./assets/icons/BRO.png",
+      "icon": "./assets/icons/FitiWhiteBackground.png",
       "hideExponentText": false
     },
     "packagerOpts": {
