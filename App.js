@@ -99,40 +99,68 @@ class SplashScreen extends React.Component {
 
 class RegisterScreen extends React.Component {
   static navigationOptions = {
-    title: 'Register'
+    title: 'Sign Up'
   };
   constructor() {
     super();
       this.state={
+        email: '',
+        password: '',
         username: '',
-        password: ''
+        firstname: '',
+        lastname: '',
       };
   }
   render() {
     return (
-      <View style={styles.
-        container}>
-        {/* <Image
-          source={require('./assets/icons/BRO.png')}
-          style={styles.image}
-        ></Image> */}
+      <View style={styles.container}>
+        <Image
+          source={require('./assets/icons/FitiBlackBackground.png')}
+          style={styles.imageSmall}
+        ></Image>
         <TextInput
           style={styles.inputField}
-          placeholder=' username'
+          placeholder='Email'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({username: text})}
+          value={this.state.email}
+          >
+        </TextInput>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Password'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({password: text})}
+          value={this.state.password}
+          secureTextEntry={true}
+          >
+        </TextInput>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Username'
+          placeholderTextColor='white'
           onChangeText={(text) => this.setState({username: text})}
           value={this.state.username}
           >
         </TextInput>
         <TextInput
           style={styles.inputField}
-          placeholder=' password'
-          onChangeText={(text) => this.setState({password: text})}
-          value={this.state.password}
-          secureTextEntry={true}
+          placeholder='First Name'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({firstname: text})}
+          value={this.state.firstname}
+          >
+        </TextInput>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Last Name'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({lastname: text})}
+          value={this.state.lastname}
           >
         </TextInput>
         <TouchableOpacity
-          style={[styles.button, styles.buttonBlue]}
+          style={[styles.button2, styles.buttonBlue]}
           onPress={() => {
               fetch('https://hohoho-backend.herokuapp.com/register', {
                 method: 'POST',
@@ -158,7 +186,7 @@ class RegisterScreen extends React.Component {
               })
           }}
           >
-          <Text style={styles.buttonLabel} >Register</Text>
+          <Text style={styles.buttonLabel}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     )
@@ -208,20 +236,22 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {/* <Image
-          source={require('./assets/icons/BRO.png')}
-          style={styles.image}
-        ></Image> */}
+        <Image
+          source={require('./assets/icons/FitiBlackBackground.png')}
+          style={styles.imageSmall}
+        ></Image>
         <TextInput
           style={styles.inputField}
-          placeholder=' username'
+          placeholder='Username'
+          placeholderTextColor='white'
           onChangeText={(text) => this.setState({username: text})}
           value={this.state.username}
           >
         </TextInput>
         <TextInput
           style={styles.inputField}
-          placeholder=' password'
+          placeholder='Password'
+          placeholderTextColor='white'
           onChangeText={(text) => this.setState({password: text})}
           value={this.state.password}
           secureTextEntry={true}
@@ -229,7 +259,7 @@ class LoginScreen extends React.Component {
           >
         </TextInput>
         <TouchableOpacity
-          style={[styles.button, styles.buttonGreen]}
+          style={[styles.button2, styles.buttonGreen]}
           onPress={() =>  this.login(this.state.username, this.state.password) }
           >
           <Text style={styles.buttonLabel} >Login</Text>
@@ -510,6 +540,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'stretch',
   },
+  button2: {
+    alignSelf: 'stretch',
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 5,
+    borderColor: 'white',
+    borderWidth: 1,
+    alignItems: 'stretch',
+  },
   buttonSmall: {
     backgroundColor: '#545454',
     borderRadius: 5,
@@ -539,17 +581,32 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   inputField: {
+    color: 'white',
     height: 40,
-    borderColor: '#bbae7a',
-    borderWidth: 3,
-    margin: 5,
-    borderRadius: 20,
-    paddingLeft: 10
+    alignSelf: 'stretch',
+    padding: 10,
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 5,
+    borderColor: 'white',
+    borderWidth: 1,
+    alignItems: 'stretch',
   },
   image: {
     display: 'block',
     height: 300,
     width: 400,
+    resizeMode: 'stretch',
+    marginBottom: 20,
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  imageSmall: {
+    display: 'block',
+    height: 150,
+    width: 200,
     resizeMode: 'stretch',
     marginBottom: 20,
     marginTop: 20,
