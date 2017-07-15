@@ -393,23 +393,25 @@ register = async(uri) => {
           time: new Date(),
       };
       storage.save({
-        key: 'grafitti',
+        key: 'graffiti',
         id: 1,
         data: report,
         expires: null
       });
-      Alert.alert(
-          "Thank You",
-          "for helping clean up our community",
-          [{text: "okay"}],
-      )
+      storage.getAllDataForKey('graffiti')
+      .then(ret => {
+        console.log('THIS IS RETURNED', ret)
+        Alert.alert(
+            "Thank You",
+            "for helping clean up our community",
+            [{text: "okay"}],
+        )
+      }).catch(err => {
+        console.log('error loading stored graffiti data', err)
+      })
     }
   }
 
-  register() {
-    report
-
-  }
 
 
   // {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
