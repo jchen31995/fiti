@@ -53,7 +53,12 @@ class SplashScreen extends React.Component {
       console.log('error', err)
     })
   }
-  componentDidMount() {
+
+  anonLogin(username, password) {
+    this.props.navigation.navigate('Home')
+  }
+
+  componentDidMount() { //persistent login
     AsyncStorage.getItem('user')
     .then(result => {
       var parsedResult = JSON.parse(result);
@@ -88,7 +93,7 @@ class SplashScreen extends React.Component {
           <Text style={styles.buttonLabel}>Sign Up</Text>
         </TouchableOpacity>
         <Text style={styles.orText}> - or - </Text>
-        <TouchableOpacity style={[styles.buttonSmall]}>
+        <TouchableOpacity style={[styles.buttonSmall]} onPress={ () => {this.props.navigation.navigate('Home')}}>
           <Text style={styles.buttonLabel2}>Skip</Text>
         </TouchableOpacity>
       </View>
