@@ -568,7 +568,7 @@ class AboutScreen extends React.Component {
                       style={styles.image}
                     ></Image>
                 </View>
-                <Text style={styles.abouttext}> The founders of this application
+                <Text style={styles.abouttext}>The founders of this application
                 created this entire experience in under 24 hours at the Horizons Hackathon
                 in San Francisco, California.  Absolutely Obscene.  Please use our app,
                 and be sure to give us all 6 figure jobs.  Have a wonderful day!
@@ -596,10 +596,17 @@ class ContactScreen extends React.Component {
                       style={styles.image}
                     ></Image>
                 </View>
-                <Text style={styles.copyright}> The founders of this application
-                created this entire experience in under 24 hours at the Horizons Hackathon
-                in San Francisco, California.  Absolutely Obscene.  Please use our app,
-                and be sure to give us all 6 figure jobs.  Thank you, and have a wonderful day!
+                <Text style={styles.contact}> FITI COPYRIGHT POLICY
+Last Revised: 07/15/2017
+DMCA Notice of Alleged Infringement (Notice):
+Identify the copyrighted work that you claim has been infringed, or if multiple copyrighted works are covered by this Notice you may provide a representative list of the copyrighted works that you claim have been infringed.
+Identify the material that you claim is infringing (or to be the subject of infringing activity) and that is to be removed or access to which is to be disabled, and information reasonably sufficient to permit us to locate the material, including at a minimum, if applicable, the URL of the link shown on the Services where such material may be found.
+Provide your mailing address, telephone number, and, if available, email address.
+Include both of the following statements in the body of the Notice: (i) "I hereby state that I have a good faith belief that the disputed use of the copyrighted material is not authorized by the copyright owner, its agent, or the law (e.g., as a fair use)"; and (ii) "I hereby state that the information in this Notice is accurate and, under penalty of perjury, that I am the owner, or authorized to act on behalf of the owner, of the copyright or of an exclusive right under the copyright that is allegedly infringed."
+Provide your full legal name and your electronic or physical signature.
+Deliver this Notice, with all items completed, to FITIs Designated Copyright Agent:
+
+CONTACT US AT US VIA FACEBOOK.
                 </Text>
             </View>
         )
@@ -631,11 +638,12 @@ const styles = StyleSheet.create({
   },
   abouttext: {
       fontSize: 20,
-      color: 'white',
+      color: 'gray',
       alignItems: 'center',
       flexDirection: 'column',
       justifyContent: 'center',
       marginLeft: 35,
+      textAlign: 'justify',
       marginRight: 35
   },
   container2: {
@@ -681,6 +689,14 @@ const styles = StyleSheet.create({
   },
   copyright: {
       fontSize: 12,
+      color: 'gray',
+      alignItems: 'flex-end',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      margin: 10,
+  },
+  contact: {
+      fontSize: 10,
       color: 'gray',
       alignItems: 'flex-end',
       flexDirection: 'column',
