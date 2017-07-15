@@ -12,7 +12,8 @@ import {
   Button,
   Image,
   Animated,
-  Easing
+  Easing,
+  ScrollView
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Location, Permissions, MapView, ImagePicker  } from 'expo';
@@ -404,12 +405,8 @@ register = async(uri) => {
             "for helping clean up our community",
             [{text: "okay"}],
         )
-        this.props.navigation.navigate('Home')
-      }).catch(err => {
-        console.log('error loading stored graffiti data', err)
-      })
-
-    }
+        this.props.navigation.navigate('Home');
+      }
   }
 
 
@@ -439,7 +436,7 @@ class Map extends React.Component {
     };
   }
 
-  _filterChicago(jsonObj) {
+  _filter(jsonObj) {
     const coordinates = []
     jsonObj.map((serviceRequest) => {
       if(serviceRequest.status==="Open"){
@@ -468,7 +465,9 @@ class Map extends React.Component {
         let filteredJsonObj = this._filter(responseJson)
         storage.getAllDataForKey('graffiti')
         .then(ret => {
-              ret.map((elt) => filteredJsonObj.push({"latitude": elt.location.latitude, "longitude": elt.location.longitude, "title": "local", "subtitle": "hey"})
+              ret.map((elt) => {
+                let eltSubtitle = "TBP" + filteredJsonObj.length.toString()
+                filteredJsonObj.push({"latitude": elt.location.latitude, "longitude": elt.location.longitude, "title": "Service Request Number", "subtitle": eltSubtitle, "uri": elt.uri })}
               )
               this.setState({allCoordinates: filteredJsonObj})
             })
@@ -498,7 +497,7 @@ class Map extends React.Component {
           }}
         >
         {this.state.allCoordinates.map((locationObj) => {
-          return <MapView.Marker pinColor='red' key={locationObj.subtitle} coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
+          return <MapView.Marker key={locationObj.subtitle} coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
             title={locationObj.title}
             description={locationObj.subtitle} /> })}
 
@@ -534,6 +533,9 @@ class MenuScreen extends React.Component {
                       source={require('./assets/icons/logocolor.png')}
                       style={styles.image}
                     ></Image>
+                    <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.props.navigation.navigate('Images')} }>
+                      <Text style={styles.buttonLabel}>My Reports</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={ () => {this.props.navigation.navigate('About')}} style={[styles.button, styles.buttonGreen]}>
                       <Text style={styles.buttonLabel}>About</Text>
                     </TouchableOpacity>
@@ -578,6 +580,35 @@ class AboutScreen extends React.Component {
         )
     }
 }
+
+class ImageScreen extends React.Component {
+  constructor() {
+    super();
+  this.state = {
+    allUris: []
+    }
+}
+
+  componentDidMount() {
+    storage.getAllDataForKey('graffiti')
+    .then(ret => {
+        let uriArr = [];
+        ret.map(elt => uriArr.push(elt.uri))
+        this.setState({allUris: uriArr});
+        console.log("ALLURIS:", this.state.allUris)
+        })
+  }
+    render () {
+        return (
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {this.state.allUris.map(aUri => {
+              return (<Image source={{uri: aUri}} style={styles.uriImage} />) }
+            )}
+            </ScrollView>
+        )
+    }
+}
+
 
 class ContactScreen extends React.Component {
   constructor() {
@@ -625,7 +656,8 @@ export default StackNavigator({
   Menu: {screen: MenuScreen},
   AfterPhoto: {screen: AfterPhoto},
   About: {screen: AboutScreen},
-  Contact: {screen: ContactScreen}
+  Contact: {screen: ContactScreen},
+  Images: {screen: ImageScreen}
 }, {initialRouteName: 'Splash'});
 
 
@@ -662,6 +694,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   aboutContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    flexDirection: 'column'
+  },
+  scrollContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -815,6 +854,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  uriImage: {
+    display: 'block',
+    height: 400,
+    width: 400,
+    resizeMode: 'cover',
+    marginBottom: 20,
+    marginTop: 20
   },
   imageSmall: {
     display: 'block',
