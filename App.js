@@ -1,3 +1,4 @@
+import Storage from 'react-native-storage';
 import React from 'react';
 import {
   AsyncStorage,
@@ -16,6 +17,15 @@ import {
 import { StackNavigator } from 'react-navigation';
 import { Location, Permissions, MapView, ImagePicker  } from 'expo';
 
+var storage = new Storage({
+  size: 10000,
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+  synch: {
+    
+  }
+})
 //Screens
 class SplashScreen extends React.Component {
 
@@ -302,48 +312,6 @@ class HomePage extends React.Component {
     }
   };
 
-  sendBrocation = async(user) => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-      if (status !== 'granted') {
-        alert("You must share your location with Bro to use this feature. Please go to settings to allow location services.")
-      } else {
-        let brocation = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
-        fetch('https://hohoho-backend.herokuapp.com/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          to: user._id,
-          location: {
-            longitude: brocation.coords.longitude,
-            latitude: brocation.coords.latitude
-          }
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (responseJson.success) {
-          Alert.alert(
-            "Bro!",
-            "You sent your brocation to " + user.username + "!",
-            [{text: "Got it bro!"}],
-            )
-        }
-        else {
-          this.setState({message:responseJson.error})
-        }
-      })
-        .catch((err) => {
-          console.log('error', err)
-      })
-      }
-  }
-
-  // componentDidMount() {
-  //   this._takeImage();
-  // }
-
   componentDidMount () {
     this.spring()
   }
@@ -409,6 +377,8 @@ class AfterPhoto extends React.Component {
       message: ''
     };
   }
+
+
 
   // {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
 
