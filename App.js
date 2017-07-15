@@ -378,6 +378,38 @@ class AfterPhoto extends React.Component {
     };
   }
 
+register = async(uri) => {
+  let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      alert("You must share your location with to use this feature. Please go to settings to allow location services.")
+    } else {
+      let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      let report = {
+          uri: uri,
+          location: {
+              longitude: location.coords.longitude,
+              latitude: location.coords.latitude
+          },
+          time: new Date(),
+      };
+      storage.save({
+        key: 'grafitti',
+        id: 1,
+        data: report,
+        expires: null
+      });
+      Alert.alert(
+          "Thank You",
+          "for helping clean up our community",
+          [{text: "okay"}],
+      )
+    }
+  }
+
+  register() {
+    report
+
+  }
 
 
   // {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
@@ -387,50 +419,10 @@ class AfterPhoto extends React.Component {
       <View style={styles.container}>
         <Text style={{color: 'white'}}> {this.props.image} </Text>
         <Image source={{ uri: this.props.navigation.state.params.image }} style={{ width: 450, height: 450 }} />
-        <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.props.navigation.navigate('Upload')}}>
+        <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.register(this.props.navigation.state.params.image)} }>
           <Text style={styles.buttonLabel}>Upload</Text>
         </TouchableOpacity>
       </View>
-    )
-  }
-}
-
-class UploadScreen extends React.Component {
-  static navigationOptions = (props) => ({
-    title: 'Submitted!',
-  });
-  constructor(props) {
-    super(props);
-    this.state = {
-      users: [],
-      message: ''
-    };
-  }
-
-  // {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
-
-  render() {
-    return (
-        <View style={styles.menuContainer}>
-            <View style={{width: 400, paddingTop: 20, justifyContent: 'space-between'}}>
-                <Image
-                  source={require('./assets/icons/logocolor.png')}
-                  style={styles.image}
-                ></Image>
-                <Text style={styles.submisison}>Your submission has been received!</Text>
-                <Text style={styles.serviceNumber}>Your submission has been received!{"\n"}Service Request Number: 17-04637213</Text>
-                <Text style={styles.submisisonSub}> Your request will be reviewed and processed within 24 hours {"\n"} A
-                cleaning crew will be dispatched after your submission is processed. </Text>
-
-                <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.props.navigation.navigate('Home')} }>
-                  <Text style={styles.buttonLabel}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.props.navigation.navigate('Splash')}}>
-                  <Text style={styles.buttonLabel}>Logout</Text>
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.copyright}> - Copyright © 2017 - Bhatti, Chen, Hennessey, Torrance - </Text>
-        </View>
     )
   }
 }
@@ -622,8 +614,7 @@ export default StackNavigator({
   Menu: {screen: MenuScreen},
   AfterPhoto: {screen: AfterPhoto},
   About: {screen: AboutScreen},
-  Contact: {screen: ContactScreen},
-  Upload: {screen: UploadScreen}
+  Contact: {screen: ContactScreen}
 }, {initialRouteName: 'Splash'});
 
 
@@ -644,37 +635,6 @@ const styles = StyleSheet.create({
       marginLeft: 35,
       textAlign: 'justify',
       marginRight: 35
-  },
-  submission: {
-      fontSize: 20,
-      color: 'white',
-      alignItems: 'center',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      paddingTop: 50,
-      marginLeft: 35,
-      textAlign: 'justify',
-      marginRight: 35
-  },
- submisisonSub: {
-      fontSize: 12,
-      color: 'gray',
-      alignItems: 'center',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      marginLeft: 25,
-      marginRight: 25,
-      paddingBottom: 15,
-      paddingTop: 10
-  },
-  serviceNumber: {
-      fontSize: 20,
-      color: 'white',
-      alignItems: 'center',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      marginLeft: 25,
-      marginRight: 25
   },
   container2: {
     flexDirection: 'row',
