@@ -809,7 +809,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-<<<<<<< HEAD
   imageMain: {
     height: 100,
     width: 129.87013,
@@ -817,8 +816,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-=======
->>>>>>> c4ea55246d59886548d053a28f7e3c7797064383
   imageCornerLeft: {
     height: 29,
     width: 29,
