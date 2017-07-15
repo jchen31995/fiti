@@ -348,15 +348,15 @@ class HomePage extends React.Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this._takeImage()}>
-          <View style={styles.circle}>
+          <Image source={require('./assets/icons/BIcircle.png')} style={styles.circle}>
             <Image
               source={require('./assets/icons/camera.png')}
               style={styles.imageMain}
             ></Image>
-          </View>
+          </Image>
         </TouchableOpacity>
         <View style={styles.container2}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => (this.props.navigation.navigate('Menu'))}>
             <View style={styles.circle2}>
               <Image
                 source={require('./assets/icons/MenuIcon.png')}
@@ -435,12 +435,12 @@ class Map extends React.Component {
     const coordinates = []
     jsonObj.map((serviceRequest) => {
       if(serviceRequest.status==="Open"){
-        coordinates.push({"latitude": serviceRequest.latitude, "longitude": serviceRequest.longitude, 
+        coordinates.push({"latitude": serviceRequest.latitude, "longitude": serviceRequest.longitude,
         "title": "Service Request Number", "subtitle": serviceRequest.service_request_number})
       }
 
     })
-    
+
     return coordinates
 
   }
@@ -484,8 +484,8 @@ class Map extends React.Component {
           }}
         >
         {this.state.allCoordinates.map((locationObj) => {
-          return <MapView.Marker coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}} 
-            title={locationObj.title} 
+          return <MapView.Marker coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
+            title={locationObj.title}
             description={locationObj.subtitle} /> })}
         </MapView>
         <View style={styles.mapTextBackground}>
@@ -500,6 +500,96 @@ class Map extends React.Component {
   }
 }
 
+class MenuScreen extends React.Component {
+  constructor() {
+    super();
+  this.state = {
+    locations: [],
+    error: '',
+    allCoordinates: []
+    }
+}
+    render () {
+        return (
+            <View style={styles.menuContainer}>
+                <View style={{width: 400, paddingTop: 20, justifyContent: 'space-between'}}>
+                    <Image
+                      source={require('./assets/icons/logocolor.png')}
+                      style={styles.image}
+                    ></Image>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('About')}} style={[styles.button, styles.buttonGreen]}>
+                      <Text style={styles.buttonLabel}>About</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.props.navigation.navigate('Contact')} }>
+                      <Text style={styles.buttonLabel}>Contact Us</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.props.navigation.navigate('Splash')}}>
+                      <Text style={styles.buttonLabel}>Logout</Text>
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.copyright}> - Copyright © 2017 - Bhatti, Chen, Hennessey, Torrance - </Text>
+            </View>
+        )
+    }
+
+}
+
+class AboutScreen extends React.Component {
+  constructor() {
+    super();
+  this.state = {
+    locations: [],
+    error: '',
+    allCoordinates: []
+    }
+}
+    render () {
+        return (
+            <View style={styles.aboutContainer}>
+                <View style={{width: 400, paddingTop: 20, justifyContent: 'space-between'}}>
+                    <Image
+                      source={require('./assets/icons/logocolor.png')}
+                      style={styles.image}
+                    ></Image>
+                </View>
+                <Text style={styles.abouttext}> The founders of this application
+                created this entire experience in under 24 hours at the Horizons Hackathon
+                in San Francisco, California.  Absolutely Obscene.  Please use our app,
+                and be sure to give us all 6 figure jobs.  Have a wonderful day!
+                </Text>
+            </View>
+        )
+    }
+}
+
+class ContactScreen extends React.Component {
+  constructor() {
+    super();
+  this.state = {
+    locations: [],
+    error: '',
+    allCoordinates: []
+    }
+}
+    render () {
+        return (
+            <View style={styles.menuContainer}>
+                <View style={{width: 400, paddingTop: 20, justifyContent: 'space-between'}}>
+                    <Image
+                      source={require('./assets/icons/logocolor.png')}
+                      style={styles.image}
+                    ></Image>
+                </View>
+                <Text style={styles.copyright}> The founders of this application
+                created this entire experience in under 24 hours at the Horizons Hackathon
+                in San Francisco, California.  Absolutely Obscene.  Please use our app,
+                and be sure to give us all 6 figure jobs.  Thank you, and have a wonderful day!
+                </Text>
+            </View>
+        )
+    }
+
+}
 
 //Navigator
 export default StackNavigator({
@@ -508,7 +598,10 @@ export default StackNavigator({
   Login: {screen: LoginScreen},
   Home: {screen: HomePage},
   Map: {screen: Map},
+  Menu: {screen: MenuScreen},
   AfterPhoto: {screen: AfterPhoto},
+  About: {screen: AboutScreen},
+  Contact: {screen: ContactScreen}
 }, {initialRouteName: 'Splash'});
 
 
@@ -520,6 +613,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
   },
+  abouttext: {
+      fontSize: 20,
+      color: 'white',
+      alignItems: 'center',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      marginLeft: 35,
+      marginRight: 35
+  },
   container2: {
     flexDirection: 'row',
     width: 370,
@@ -527,11 +629,25 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     backgroundColor: 'black',
   },
+  menuContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    flexDirection: 'column'
+  },
+  aboutContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    flexDirection: 'column'
+  },
   circle: {
     width: 300,
     height: 300,
-    borderRadius: 300/2,
-    backgroundColor: 'white',
+    // borderRadius: 300/2,
+    // backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 110,
@@ -546,6 +662,14 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     marginTop: 110,
+  },
+  copyright: {
+      fontSize: 12,
+      color: 'gray',
+      alignItems: 'flex-end',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      margin: 10,
   },
   mapBackground: {
     flex: 1,
@@ -670,8 +794,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   imageMain: {
-    height: 154,
-    width: 200,
+    height: 100,
+    width: 129.87013,
     resizeMode: 'stretch',
     justifyContent: 'center',
     alignItems: 'center',
