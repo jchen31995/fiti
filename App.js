@@ -401,9 +401,9 @@ register = async(uri) => {
         expires: null
       });
         Alert.alert(
-            "Thank You",
-            "for helping clean up our community",
-            [{text: "okay"}],
+            "Submitted",
+            "Thank you for helping clean up our community",
+            [{text: "Great!"}],
         )
         this.props.navigation.navigate('Home');
       }
@@ -477,7 +477,7 @@ class Map extends React.Component {
         .then(ret => {
               ret.map((elt) => {
                 let eltSubtitle = "TBP" + filteredJsonObj.length.toString()
-                filteredJsonObj.push({"latitude": elt.location.latitude, "longitude": elt.location.longitude, "title": "Service Request Number", "subtitle": eltSubtitle, "uri": elt.uri })}
+                filteredJsonObj.push({"latitude": elt.location.latitude, "longitude": elt.location.longitude, "title": "Service Request Number", "subtitle": eltSubtitle, "uri": elt.uri, "user": "dropped" })}
               )
               this.setState({allCoordinates: filteredJsonObj})
             })
@@ -507,9 +507,17 @@ class Map extends React.Component {
           }}
         >
         {this.state.allCoordinates.map((locationObj) => {
-          return <MapView.Marker key={locationObj.subtitle} coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
+          if (locationObj.user==="dropped"){
+            return <MapView.Marker pinColor='green' key={locationObj.subtitle} coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
             title={locationObj.title}
-            description={locationObj.subtitle} /> })}
+            description={locationObj.subtitle} />
+          }else{
+            return <MapView.Marker key={locationObj.subtitle} coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
+            title={locationObj.title}
+            description={locationObj.subtitle} />
+
+          }
+           })}
 
 
 
