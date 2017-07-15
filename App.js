@@ -618,11 +618,13 @@ class ImageScreen extends React.Component {
   }
     render () {
         return (
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.scrollContainer}>
+            <ScrollView>
             {this.state.allUris.map(aUri => {
-              return (<Image source={{uri: aUri}} style={styles.uriImage} />) }
+              return (<Image key={aUri} source={{uri: aUri}} style={styles.uriImage} />) }
             )}
             </ScrollView>
+          </View>
         )
     }
 }
