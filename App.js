@@ -232,7 +232,7 @@ class LoginScreen extends React.Component {
       console.log('error', err)
     })
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
