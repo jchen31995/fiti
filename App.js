@@ -272,10 +272,10 @@ class LoginScreen extends React.Component {
 
 class HomePage extends React.Component {
   static navigationOptions = (props) => ({
-    title: 'BRO',
+    title: 'Report Grafitti',
     headerRight:
-    <TouchableOpacity onPress={() => (props.navigation.navigate('Messages'))}>
-      <Text>Messages </Text>
+    <TouchableOpacity onPress={() => (props.navigation.navigate('Map'))}>
+      <Text> Map </Text>
     </TouchableOpacity>
   });
   constructor() {
@@ -396,33 +396,13 @@ class HomePage extends React.Component {
   }
 }
 
-class Messages extends React.Component {
+class Map extends React.Component {
   constructor() {
     super();
   this.state = {
     locations: [],
     error: ''
     };
-    //get message data
-    fetch('https://hohoho-backend.herokuapp.com/messages', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      if (responseJson.success) {
-      this.setState({ messages: responseJson.messages})
-        console.log("state", this.state.messages)
-        }
-      else {
-        this.setState({error:responseJson.error})
-      }
-    })
-      .catch((err) => {
-        console.log('error', err)
-    })
   }
   render() {
     var dataSource = new ListView.DataSource({
@@ -485,7 +465,7 @@ class SwiperScreen extends React.Component {
     return (
       <Swiper>
         <HomePage/>
-        <Messages/>
+        <Map/>
       </Swiper>
     );
   }
@@ -497,7 +477,7 @@ export default StackNavigator({
   Register: {screen: RegisterScreen},
   Login: {screen: LoginScreen},
   Home: {screen: HomePage},
-  Messages: {screen: Messages},
+  Map: {screen: Map},
   SwiperScreen: {screen: SwiperScreen},
 }, {initialRouteName: 'Splash'});
 
