@@ -232,7 +232,7 @@ class LoginScreen extends React.Component {
       console.log('error', err)
     })
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
@@ -440,7 +440,7 @@ class Messages extends React.Component {
             style={[styles.button, styles.buttonBlue]}
             >
             <Text style={styles.textSmall}>From: {message.from.username} To: {message.to.username} Message: 'Bro' When: {message.timestamp}</Text>
-            
+
             {(message.location && message.location.longitude && message.location.latitude) ?
             <MapView
               style={{height: 150}}
