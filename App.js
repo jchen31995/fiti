@@ -277,14 +277,9 @@ class LoginScreen extends React.Component {
 class HomePage extends React.Component {
   static navigationOptions = (props) => ({
     title: 'Report Grafitti',
-    headerRight:
-    <TouchableOpacity onPress={() => (props.navigation.navigate('Map'))}>
-      <Text> Map </Text>
-    </TouchableOpacity>,
-    image: 'hi'
   });
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   this.state = {
     users: [],
     message: ''
@@ -322,33 +317,6 @@ class HomePage extends React.Component {
     }
   };
 
-  sendABro(user) {
-      fetch('https://hohoho-backend.herokuapp.com/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          to: user._id,
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (responseJson.success) {
-          Alert.alert(
-            "Bro!",
-            "You sent a bro to " + user.username + "!",
-            [{text: "Sick bro!"}],
-            )
-          }
-        else {
-          this.setState({message:responseJson.error})
-        }
-      })
-        .catch((err) => {
-          console.log('error', err)
-      })
-  }
   sendBrocation = async(user) => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status !== 'granted') {
@@ -387,9 +355,9 @@ class HomePage extends React.Component {
       }
   }
 
-  componentDidMount() {
-    this._takeImage();
-  }
+  // componentDidMount() {
+  //   this._takeImage();
+  // }
 
   render() {
     var dataSource = new ListView.DataSource({
@@ -397,6 +365,74 @@ class HomePage extends React.Component {
     });
     return (
       <View style={styles.container}>
+        <TouchableOpacity onPress={() => this._takeImage()}>
+          <View style={styles.circle}>
+            <Image
+              source={require('./assets/icons/camera.png')}
+              style={styles.imageMain}
+            ></Image>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.container2}>
+          <TouchableOpacity>
+            <View style={styles.circle2}>
+              <Image
+                source={require('./assets/icons/MenuIcon.png')}
+                style={styles.imageCornerLeft}
+              ></Image>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => (this.props.navigation.navigate('Map'))}>
+            <View style={styles.circle2}>
+              <Image
+                source={require('./assets/icons/MapMarker.png')}
+                style={styles.imageCornerRight}
+              ></Image>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+}
+
+class AfterPhoto extends React.Component {
+  static navigationOptions = (props) => ({
+    title: 'Report Grafitti',
+    headerRight:
+    <TouchableOpacity onPress={() => (props.navigation.navigate('Map'))}>
+      <Text> Map </Text>
+    </TouchableOpacity>,
+    image: 'hi'
+  });
+  constructor() {
+    super();
+    this.state = {
+      users: [],
+      message: ''
+    };
+  }
+
+  _takeImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  }
+
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => this._takeImage()}>
+          <View style={styles.circle}></View>
+        </TouchableOpacity>
         {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
       </View>
     )
@@ -418,7 +454,7 @@ class Map extends React.Component {
     return (
       <View style={styles.mapBackground}>
         <MapView
-          style={{height: 535}}
+          style={{flex: .93}}
           initialRegion={{
             latitude: 41.8702179,
             longitude: -87.7589756,
@@ -477,6 +513,7 @@ export default StackNavigator({
   Login: {screen: LoginScreen},
   Home: {screen: HomePage},
   Map: {screen: Map},
+  AfterPhoto: {screen: AfterPhoto},
 }, {initialRouteName: 'Splash'});
 
 
@@ -488,7 +525,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
   },
+  container2: {
+    flexDirection: 'row',
+    width: 370,
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    backgroundColor: 'black',
+  },
+  circle: {
+    width: 300,
+    height: 300,
+    borderRadius: 300/2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 110,
+  },
+  circle2: {
+    width: 50,
+    height: 50,
+    borderRadius: 50/2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 110,
+  },
   mapBackground: {
+    flex: 1,
     backgroundColor: 'white',
   },
   mapTextBackground: {
@@ -609,13 +674,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  imageMain: {
+    height: 154,
+    width: 200,
+    resizeMode: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageCornerLeft: {
+    height: 29,
+    width: 29,
+    resizeMode: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageCornerRight: {
+    height: 37,
+    width: 37,
+    resizeMode: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   imageSmallMap: {
     display: 'block',
     height: 45,
     width: 200,
     resizeMode: 'stretch',
     marginBottom: 20,
-    marginTop: 10,
+    marginTop: 12,
     justifyContent: 'center',
     alignItems: 'center'
   },
