@@ -6,6 +6,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   TextInput,
   ListView,
   Alert,
@@ -354,7 +355,7 @@ class HomePage extends React.Component {
               ></Image>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => (this.props.navigation.navigate('Map'))}>
+          <TouchableOpacity onPress={() => (this.props.navigation.navigate('Map', {"initialLatitude": 37.7749, "initialLongitude": -122.4194,"initialLatitudeDelta": .1, "initialLongitudeDelta":.05}))}>
             <View style={styles.circle2}>
               <Image
                 source={require('./assets/icons/MapMarker.png')}
@@ -500,10 +501,10 @@ class Map extends React.Component {
         <MapView
           style={{flex: .93}}
           initialRegion={{
-            latitude: 37.7749,
-            longitude: -122.4194,
-            latitudeDelta: .5,
-            longitudeDelta: .25,
+            latitude: this.props.navigation.state.params.initialLatitude,
+            longitude: this.props.navigation.state.params.initialLongitude,
+            latitudeDelta: this.props.navigation.state.params.initialLatitudeDelta,
+            longitudeDelta: this.props.navigation.state.params.initialLongitudeDelta,
           }}
         >
         {this.state.allCoordinates.map((locationObj) => {
@@ -616,12 +617,13 @@ class ImageScreen extends React.Component {
         console.log("ALLURIS:", this.state.allUris)
         })
   }
-    render () {
+
+  render () {
         return (
           <View style={styles.scrollContainer}>
             <ScrollView>
             {this.state.allUris.map(aUri => {
-              return (<Image key={aUri} source={{uri: aUri}} style={styles.uriImage} />) }
+              return (<Image source={{uri: aUri}} style={styles.uriImage}/>) }
             )}
             </ScrollView>
           </View>
