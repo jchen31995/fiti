@@ -286,27 +286,9 @@ class HomePage extends React.Component {
   constructor() {
     super();
   this.state = {
-    users: [],
+    coordinate: [],
     message: ''
-    };
-    fetch('https://hohoho-backend.herokuapp.com/users', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      if (responseJson.success) {
-      this.setState({ users: responseJson.users})
-        }
-      else {
-        this.setState({message:responseJson.error})
-      }
-    })
-      .catch((err) => {
-        console.log('error', err)
-    })
+    }
   }
 
   _takeImage = async () => {
@@ -408,13 +390,52 @@ class Map extends React.Component {
     super();
   this.state = {
     locations: [],
-    error: ''
+    error: '',
+    allCoordinates: []
     };
+  }
+
+  _filter(jsonObj) {
+    const coordinates = []
+    jsonObj.map((serviceRequest) => {
+      if(serviceRequest.status==="Open"){
+        coordinates.push({"latitude": serviceRequest.latitude, "longitude": serviceRequest.longitude, 
+        "title": "Service Request Number", "subtitle": serviceRequest.service_request_number})
+      }
+
+    })
+    
+    return coordinates
+
+  }
+
+  componentDidMount() {
+    console.log("it's getting here")
+    fetch('https://data.cityofchicago.org/resource/cdmx-wzbz.json', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if (responseJson) {
+        const filteredJsonObj = this._filter(responseJson)
+        this.setState({allCoordinates: filteredJsonObj})
+      }
+      else {
+        this.setState({message:responseJson.error})
+      }
+    })
+      .catch((err) => {
+        console.log('error', err)
+    })
   }
   render() {
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => (r1 !== r2)
     });
+
     return (
       <View style={styles.mapBackground}>
         <MapView
@@ -425,7 +446,12 @@ class Map extends React.Component {
             latitudeDelta: .5,
             longitudeDelta: .25,
           }}
-        />
+        >
+        {this.state.allCoordinates.map((locationObj) => {
+          return <MapView.Marker coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}} 
+            title={locationObj.title} 
+            description={locationObj.subtitle} /> })}
+        </MapView>
         <View style={styles.mapTextBackground}>
           <Image
             source={require('./assets/icons/FitiText.png')}
@@ -433,38 +459,7 @@ class Map extends React.Component {
           ></Image>
         </View>
       </View>
-       //  <ListView
-       //    renderRow={(location) => (
-       //    <TouchableOpacity style={[styles.button, styles.buttonBlue]}>
-       //      {(location.location && location.location.longitude && location.location.latitude) ?
-       //      <MapView
-       //        style={{height: 600}}
-       //        showsUserLocation={true}
-       //        scrollEnabled={false}
-       //        initialRegion={{
-       //          latitude: location.location.latitude,
-       //          longitude: location.location.longitude,
-       //          latitudeDelta: .05,
-       //          longitudeDelta: .025
-       //        }}
-       //        />
-       //        :
-       //        <MapView
-       //        style={{height: 600}}
-       //        showsUserLocation={true}
-       //        scrollEnabled={false}
-       //        initialRegion={{
-       //          latitude: 36.778259,
-       //          longitude: ‎119.417931,
-       //          latitudeDelta: 10,
-       //          longitudeDelta: 10,
-       //        }}
-       //        />
-       //        }
-       //    </TouchableOpacity>
-       //    )}
-       //    dataSource={dataSource.cloneWithRows(this.state.messages)}
-       // />
+
     )
   }
 }
