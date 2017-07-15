@@ -106,7 +106,7 @@ class SplashScreen extends React.Component {
         </TouchableOpacity>
         <Text style={styles.orText}> - or - </Text>
         <TouchableOpacity style={[styles.buttonSmall]} onPress={ () => {this.props.navigation.navigate('Home')}}>
-          <Text style={styles.buttonLabel2}>Skip</Text>
+          <Text style={styles.buttonLabel2}>Submit anonymously</Text>
         </TouchableOpacity>
       </View>
     )
@@ -315,6 +315,7 @@ class HomePage extends React.Component {
   componentDidMount () {
     this.spring()
   }
+
   spring () {
     this.springValue.setValue(0.15)
     Animated.spring(
@@ -406,6 +407,7 @@ register = async(uri) => {
             "for helping clean up our community",
             [{text: "okay"}],
         )
+        this.props.navigation.navigate('Home')
       }).catch(err => {
         console.log('error loading stored graffiti data', err)
       })
@@ -439,18 +441,15 @@ class Map extends React.Component {
     };
   }
 
-  _filter(jsonObj) {
+  _filterChicago(jsonObj) {
     const coordinates = []
     jsonObj.map((serviceRequest) => {
       if(serviceRequest.status==="Open"){
-        coordinates.push({"latitude": serviceRequest.latitude, "longitude": serviceRequest.longitude,
+        coordinates.push({"latitude": parseFloat(serviceRequest.latitude), "longitude": parseFloat(serviceRequest.longitude),
         "title": "Service Request Number", "subtitle": serviceRequest.service_request_number})
       }
-
     })
-
-    return coordinates
-
+    return coordinates //array of objects with lat/long/title/subtitle
   }
 
   componentDidMount() {
@@ -464,7 +463,7 @@ class Map extends React.Component {
     .then((response) => response.json())
     .then((responseJson) => {
       if (responseJson) {
-        const filteredJsonObj = this._filter(responseJson)
+        const filteredJsonObj = this._filterChicago(responseJson)
         this.setState({allCoordinates: filteredJsonObj})
       }
       else {
@@ -492,7 +491,7 @@ class Map extends React.Component {
           }}
         >
         {this.state.allCoordinates.map((locationObj) => {
-          return <MapView.Marker coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
+          return <MapView.Marker pinColor='red' key={locationObj.subtitle} coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
             title={locationObj.title}
             description={locationObj.subtitle} /> })}
         </MapView>
