@@ -10,6 +10,8 @@ import {
   Alert,
   Button,
   Image,
+  Animated,
+  Easing
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Location, Permissions, MapView, ImagePicker  } from 'expo';
@@ -274,15 +276,19 @@ class LoginScreen extends React.Component {
   }
 }
 
+//let picUri;
+
 class HomePage extends React.Component {
   static navigationOptions = (props) => ({
     title: 'Report Grafitti',
   });
   constructor(props) {
     super(props);
+    this.springValue = new Animated.Value(0.15)
   this.state = {
     coordinate: [],
-    message: ''
+    message: '',
+    image: ''
     }
   }
 
@@ -292,10 +298,9 @@ class HomePage extends React.Component {
       aspect: [4, 3]
     });
 
-    console.log(result);
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      this.props.navigation.navigate('AfterPhoto', {image: result.uri})
     }
   };
 
@@ -341,6 +346,20 @@ class HomePage extends React.Component {
   //   this._takeImage();
   // }
 
+  componentDidMount () {
+    this.spring()
+  }
+  spring () {
+    this.springValue.setValue(0.15)
+    Animated.spring(
+      this.springValue,
+      {
+        toValue: 1,
+        friction: 1
+      }
+      ).start()
+  }
+
   render() {
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => (r1 !== r2)
@@ -349,14 +368,17 @@ class HomePage extends React.Component {
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this._takeImage()}>
           <View style={styles.circle}>
-            <Image
-              source={require('./assets/icons/camera.png')}
-              style={styles.imageMain}
-            ></Image>
+            <Animated.Image
+              style={{
+                height: 154,
+                width: 200,
+                transform: [{scale: this.springValue}] }}
+                source={require('./assets/icons/camera.png')}
+            />
           </View>
         </TouchableOpacity>
         <View style={styles.container2}>
-          <TouchableOpacity>
+          <TouchableOpacity test = {this.state.test} onPress={() => (this.props.navigation.navigate('AfterPhoto'))}>
             <View style={styles.circle2}>
               <Image
                 source={require('./assets/icons/MenuIcon.png')}
@@ -380,15 +402,10 @@ class HomePage extends React.Component {
 
 class AfterPhoto extends React.Component {
   static navigationOptions = (props) => ({
-    title: 'Report Grafitti',
-    headerRight:
-    <TouchableOpacity onPress={() => (props.navigation.navigate('Map'))}>
-      <Text> Map </Text>
-    </TouchableOpacity>,
-    image: 'hi'
+    title: 'Submit Photo',
   });
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       users: [],
       message: ''
@@ -408,14 +425,13 @@ class AfterPhoto extends React.Component {
     }
   }
 
+  // {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this._takeImage()}>
-          <View style={styles.circle}></View>
-        </TouchableOpacity>
-        {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
+        <Text style={{color: 'white'}}> {this.props.image} </Text>
+        <Image source={{ uri: this.props.navigation.state.params.image }} style={{ width: 200, height: 200 }} />
       </View>
     )
   }
@@ -668,13 +684,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  imageMain: {
-    height: 154,
-    width: 200,
-    resizeMode: 'stretch',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   imageCornerLeft: {
     height: 29,
