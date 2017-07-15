@@ -81,7 +81,7 @@ class SplashScreen extends React.Component {
           .then(resp => resp.json())
           .then((responseJson) => {
             if (responseJson.success) {
-              this.props.navigation.navigate('Splash')
+              this.props.navigation.navigate('Home')
             }
           });
       }
@@ -394,21 +394,16 @@ register = async(uri) => {
       };
       storage.save({
         key: 'graffiti',
-        id: 1,
+        id: uri,
         data: report,
         expires: null
       });
-      storage.getAllDataForKey('graffiti')
-      .then(ret => {
-        console.log('THIS IS RETURNED', ret)
         Alert.alert(
             "Thank You",
             "for helping clean up our community",
             [{text: "okay"}],
         )
-      }).catch(err => {
-        console.log('error loading stored graffiti data', err)
-      })
+        this.props.navigation.navigate('Home');
     }
   }
 
@@ -453,8 +448,11 @@ class Map extends React.Component {
 
   }
 
+
+
+
+
   componentDidMount() {
-    console.log("it's getting here")
     fetch('https://data.cityofchicago.org/resource/cdmx-wzbz.json', {
       method: 'GET',
       headers: {
@@ -464,8 +462,14 @@ class Map extends React.Component {
     .then((response) => response.json())
     .then((responseJson) => {
       if (responseJson) {
-        const filteredJsonObj = this._filter(responseJson)
-        this.setState({allCoordinates: filteredJsonObj})
+        let filteredJsonObj = this._filter(responseJson)
+        storage.getAllDataForKey('graffiti')
+        .then(ret => {
+              ret.map((elt) => filteredJsonObj.push({"latitude": elt.location.latitude, "longitude": elt.location.longitude, "title": "local", "subtitle": "hey"})
+              )
+              this.setState({allCoordinates: filteredJsonObj})
+            })
+
       }
       else {
         this.setState({message:responseJson.error})
@@ -495,6 +499,9 @@ class Map extends React.Component {
           return <MapView.Marker coordinate={{"latitude": locationObj.latitude, "longitude": locationObj.longitude}}
             title={locationObj.title}
             description={locationObj.subtitle} /> })}
+
+
+
         </MapView>
         <View style={styles.mapTextBackground}>
           <Image
