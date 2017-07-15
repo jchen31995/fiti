@@ -294,8 +294,6 @@ class HomePage extends React.Component {
 
   _takeImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3]
     });
 
 
@@ -412,26 +410,16 @@ class AfterPhoto extends React.Component {
     };
   }
 
-  _takeImage = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
-  }
-
   // {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
 
   render() {
     return (
       <View style={styles.container}>
         <Text style={{color: 'white'}}> {this.props.image} </Text>
-        <Image source={{ uri: this.props.navigation.state.params.image }} style={{ width: 200, height: 200 }} />
+        <Image source={{ uri: this.props.navigation.state.params.image }} style={{ width: 450, height: 450 }} />
+        <TouchableOpacity style={[styles.button, styles.buttonBlue]} onPress={ () => {this.register()} }>
+          <Text style={styles.buttonLabel}>Upload</Text>
+        </TouchableOpacity>
       </View>
     )
   }
