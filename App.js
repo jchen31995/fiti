@@ -12,8 +12,7 @@ import {
   Image,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import { Location, Permissions, MapView } from 'expo';
-import Swiper from 'react-native-swiper'
+import { Location, Permissions, MapView, ImagePicker  } from 'expo';
 
 //Screens
 class SplashScreen extends React.Component {
@@ -44,7 +43,7 @@ class SplashScreen extends React.Component {
           username: username,
           password: password
         }));
-        this.props.navigation.navigate('SwiperScreen')
+        this.props.navigation.navigate('Home')
       }
       else {
         this.setState({message:responseJson.error})
@@ -222,7 +221,7 @@ class LoginScreen extends React.Component {
           username: username,
           password: password
         }));
-        this.props.navigation.navigate('SwiperScreen')
+        this.props.navigation.navigate('Home')
       }
       else {
         this.setState({message:responseJson.error})
@@ -276,7 +275,8 @@ class HomePage extends React.Component {
     headerRight:
     <TouchableOpacity onPress={() => (props.navigation.navigate('Map'))}>
       <Text> Map </Text>
-    </TouchableOpacity>
+    </TouchableOpacity>,
+    image: 'hi'
   });
   constructor() {
     super();
@@ -303,6 +303,20 @@ class HomePage extends React.Component {
         console.log('error', err)
     })
   }
+
+  _takeImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
   sendABro(user) {
       fetch('https://hohoho-backend.herokuapp.com/messages', {
         method: 'POST',
@@ -367,30 +381,18 @@ class HomePage extends React.Component {
       })
       }
   }
+
+  componentDidMount() {
+    this._takeImage();
+  }
+
   render() {
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => (r1 !== r2)
     });
     return (
       <View style={styles.container}>
-        <Image
-          source={require('./assets/icons/BRO.png')}
-          style={styles.image}
-        ></Image>
-        <Text style={styles.defaultFont}> Tap to send a Bro </Text>
-        <Text style={styles.defaultFont2}> Hold to send your Brocation </Text>
-        <ListView
-          renderRow={(user) => (
-          <TouchableOpacity
-            style={[styles.button, styles.buttonBlue]}
-            onPress={() => this.sendABro(user)}
-            onLongPress={this.sendBrocation.bind(this, user)}
-            delayLongPress={500}>
-            <Text style={styles.textBig}>{user.username}</Text>
-          </TouchableOpacity>
-          )}
-          dataSource={dataSource.cloneWithRows(this.state.users)}
-        />
+        {<Image source={{ uri: this.state.image }} style={{ width: 200, height: 200 }} />}
       </View>
     )
   }
@@ -456,20 +458,6 @@ class Map extends React.Component {
   }
 }
 
-class SwiperScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Bro!'
-  };
-
-  render() {
-    return (
-      <Swiper>
-        <HomePage/>
-        <Map/>
-      </Swiper>
-    );
-  }
-}
 
 //Navigator
 export default StackNavigator({
@@ -478,7 +466,6 @@ export default StackNavigator({
   Login: {screen: LoginScreen},
   Home: {screen: HomePage},
   Map: {screen: Map},
-  SwiperScreen: {screen: SwiperScreen},
 }, {initialRouteName: 'Splash'});
 
 
