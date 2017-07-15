@@ -447,12 +447,22 @@ class Map extends React.Component {
     return coordinates //array of objects with lat/long/title/subtitle
   }
 
-
+  _filterSF(jsonObj) {
+     const coordinates = []
+     jsonObj.map((serviceRequest) => {
+       if(serviceRequest.status_notes==="Open"){
+         try{coordinates.push({"latitude": parseFloat(serviceRequest.point.latitude), "longitude": parseFloat(serviceRequest.point.longitude),
+         "title": "Service Request Number", "subtitle": serviceRequest.case_id})}
+         catch(err){console.log(err)}
+       }
+     })
+     return coordinates //array of objects with lat/long/title/subtitle
+  }
 
 
 
   componentDidMount() {
-    fetch('https://data.cityofchicago.org/resource/cdmx-wzbz.json', {
+    fetch('https://data.sfgov.org/resource/vg6y-3pcr.json', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -462,7 +472,7 @@ class Map extends React.Component {
     .then((responseJson) => {
       if (responseJson) {
 
-        let filteredJsonObj = this._filter(responseJson)
+        let filteredJsonObj = this._filterSF(responseJson)
         storage.getAllDataForKey('graffiti')
         .then(ret => {
               ret.map((elt) => {
@@ -490,8 +500,8 @@ class Map extends React.Component {
         <MapView
           style={{flex: .93}}
           initialRegion={{
-            latitude: 41.8702179,
-            longitude: -87.7589756,
+            latitude: 37.7749,
+            longitude: -122.4194,
             latitudeDelta: .5,
             longitudeDelta: .25,
           }}
