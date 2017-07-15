@@ -120,31 +120,6 @@ class RegisterScreen extends React.Component {
         ></Image>
         <TextInput
           style={styles.inputField}
-          placeholder='Email'
-          placeholderTextColor='white'
-          onChangeText={(text) => this.setState({username: text})}
-          value={this.state.email}
-          >
-        </TextInput>
-        <TextInput
-          style={styles.inputField}
-          placeholder='Password'
-          placeholderTextColor='white'
-          onChangeText={(text) => this.setState({password: text})}
-          value={this.state.password}
-          secureTextEntry={true}
-          >
-        </TextInput>
-        <TextInput
-          style={styles.inputField}
-          placeholder='Username'
-          placeholderTextColor='white'
-          onChangeText={(text) => this.setState({username: text})}
-          value={this.state.username}
-          >
-        </TextInput>
-        <TextInput
-          style={styles.inputField}
           placeholder='First Name'
           placeholderTextColor='white'
           onChangeText={(text) => this.setState({firstname: text})}
@@ -157,6 +132,31 @@ class RegisterScreen extends React.Component {
           placeholderTextColor='white'
           onChangeText={(text) => this.setState({lastname: text})}
           value={this.state.lastname}
+          >
+        </TextInput>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Email'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({username: text})}
+          value={this.state.email}
+          >
+        </TextInput>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Username'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({username: text})}
+          value={this.state.username}
+          >
+        </TextInput>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Password'
+          placeholderTextColor='white'
+          onChangeText={(text) => this.setState({password: text})}
+          value={this.state.password}
+          secureTextEntry={true}
           >
         </TextInput>
         <TouchableOpacity
@@ -400,7 +400,7 @@ class Messages extends React.Component {
   constructor() {
     super();
   this.state = {
-    messages: [],
+    locations: [],
     error: ''
     };
     //get message data
@@ -429,38 +429,49 @@ class Messages extends React.Component {
       rowHasChanged: (r1, r2) => (r1 !== r2)
     });
     return (
-      <View style={styles.container}>
-        <Image
-          source={require('./assets/icons/BRO.png')}
-          style={styles.image}
-        ></Image>
-        <ListView
-          renderRow={(message) => (
-          <TouchableOpacity
-            style={[styles.button, styles.buttonBlue]}
-            >
-            <Text style={styles.textSmall}>From: {message.from.username} To: {message.to.username} Message: 'Bro' When: {message.timestamp}</Text>
-            
-            {(message.location && message.location.longitude && message.location.latitude) ?
-            <MapView
-              style={{height: 150}}
-              showsUserLocation={true}
-              scrollEnabled={false}
-              initialRegion={{
-                latitude: message.location.latitude,
-                longitude: message.location.longitude,
-                latitudeDelta: .05,
-                longitudeDelta: .025
-              }}
-              />
-              :
-              null
-              }
-          </TouchableOpacity>
-          )}
-          dataSource={dataSource.cloneWithRows(this.state.messages)}
-       />
+      <View>
+        <MapView
+          style={{height: 535}}
+          initialRegion={{
+            latitude: 36.778259,
+            longitude: 10,
+            latitudeDelta: 10,
+            longitudeDelta: 10,
+          }}
+        />
       </View>
+       //  <ListView
+       //    renderRow={(location) => (
+       //    <TouchableOpacity style={[styles.button, styles.buttonBlue]}>
+       //      {(location.location && location.location.longitude && location.location.latitude) ?
+       //      <MapView
+       //        style={{height: 600}}
+       //        showsUserLocation={true}
+       //        scrollEnabled={false}
+       //        initialRegion={{
+       //          latitude: location.location.latitude,
+       //          longitude: location.location.longitude,
+       //          latitudeDelta: .05,
+       //          longitudeDelta: .025
+       //        }}
+       //        />
+       //        :
+       //        <MapView
+       //        style={{height: 600}}
+       //        showsUserLocation={true}
+       //        scrollEnabled={false}
+       //        initialRegion={{
+       //          latitude: 36.778259,
+       //          longitude: ‎119.417931,
+       //          latitudeDelta: 10,
+       //          longitudeDelta: 10,
+       //        }}
+       //        />
+       //        }
+       //    </TouchableOpacity>
+       //    )}
+       //    dataSource={dataSource.cloneWithRows(this.state.messages)}
+       // />
     )
   }
 }
