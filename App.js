@@ -411,16 +411,22 @@ class Map extends React.Component {
       rowHasChanged: (r1, r2) => (r1 !== r2)
     });
     return (
-      <View>
+      <View style={styles.mapBackground}>
         <MapView
           style={{height: 535}}
           initialRegion={{
-            latitude: 36.778259,
-            longitude: 10,
-            latitudeDelta: 10,
-            longitudeDelta: 10,
+            latitude: 41.8702179,
+            longitude: -87.7589756,
+            latitudeDelta: .5,
+            longitudeDelta: .25,
           }}
         />
+        <View style={styles.mapTextBackground}>
+          <Image
+            source={require('./assets/icons/FitiText.png')}
+            style={styles.imageSmallMap}
+          ></Image>
+        </View>
       </View>
        //  <ListView
        //    renderRow={(location) => (
@@ -476,6 +482,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
+  },
+  mapBackground: {
+    backgroundColor: 'white',
+  },
+  mapTextBackground: {
+    backgroundColor: 'white',
+    alignItems: 'center',
   },
   containerFull: {
     flex: 1,
@@ -588,6 +601,16 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     marginBottom: 20,
     marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  imageSmallMap: {
+    display: 'block',
+    height: 45,
+    width: 200,
+    resizeMode: 'stretch',
+    marginBottom: 20,
+    marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },
