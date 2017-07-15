@@ -23,7 +23,7 @@ var storage = new Storage({
   defaultExpires: null,
   enableCache: true,
   synch: {
-    
+
   }
 })
 //Screens
